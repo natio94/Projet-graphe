@@ -53,6 +53,22 @@ def printMatrice(matrice):
         print()
         print(" ", end="")
         print("-" * tailleFinale)
+    
+def floydWarshall(matrice):
+    n = len(matrice[0])
+    mat=matrice
+    for k in range(n):
+        new_mat = [[0 for i in range(n)] for j in range(n)]
+        for i in range(n):
+            for j in range(n):
+                new_mat[i][j]=min(mat[i][j],mat[i][k]+mat[k][j])
+        print("--------------------------------------------------")
+        printMatrice(mat)
+        printMatrice(new_mat)
+        mat = new_mat
+    return new_mat
 
 nbSommets, nbArcs, arcs=read("test")
-printMatrice(matriceAdjacence(arcs,nbSommets))
+matrice=matriceAdjacence(arcs,nbSommets)
+printMatrice(matrice)
+print(floydWarshall(matrice))
