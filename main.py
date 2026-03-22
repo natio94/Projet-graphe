@@ -1,3 +1,4 @@
+from math import inf
 def read(graphe):
     with open("./graphes/"+graphe+".txt", "r") as f:
         nbSommets=int(clean(f.readline()))
@@ -8,7 +9,7 @@ def read(graphe):
     return nbSommets, nbArcs, arcs
 
 def matriceAdjacence(arcs, nbSommets):
-    matrice = [[0 for i in range(nbSommets)] for j in range(nbSommets)]
+    matrice = [[inf for i in range(nbSommets)] for j in range(nbSommets)]
     for arc in arcs:
         matrice[arc["debut"]][arc["fin"]] = arc["poids"]
     return matrice
@@ -26,6 +27,19 @@ def getSommets(arcs):
         sommets.add(arc["fin"])
     return sommets
 
+def floydWarshall(matrice):
+    n = len(matrice[0])
+    mat=matrice
+    for k in range(n):
+        new_mat = [[0 for i in range(n)] for j in range(n)]
+        for i in range(n):
+            for j in range(n):
+                new_mat[i][j]=min(mat[i][j],mat[i][k]+mat[k][j])
+        print("--------------------------------------------------")
+        printMatrice(mat)
+        printMatrice(new_mat)
+        mat = new_mat
+    return mat
 
 def maxLen(matrice):
     maxi = 0
@@ -37,22 +51,42 @@ def maxLen(matrice):
 
 def printMatrice(matrice):
     maxi=maxLen(matrice)
-    tailleFinale=maxi*len(matrice)+len(matrice)+1
-    print(" ", end="")
+    tailleFinale=maxi*len(matrice)+len(matrice)+2
     sommets=list(getSommets(arcs))
     for sommet in sommets:
         print(str(sommet).rjust(maxi), end=" ")
     print()
-    print(" ", end="")
     print("-" * tailleFinale)
     for i in range(len(matrice)):
         print(sommets[i], end="")
         print("|", end="")
         for j in range(len(matrice[i])):
+
             print(str(matrice[i][j]).rjust(maxi), end="|")
         print()
-        print(" ", end="")
         print("-" * tailleFinale)
 
+def printTxt(matrice,graphe):
+    with open("./graphes/"+graphe+"StackTrace.txt", "a") as f:
+        print("Affichage de la matrice d'adjacence du graphe", file=f)
+        maxi = maxLen(matrice)
+        tailleFinale = maxi * len(matrice) + len(matrice) + 2
+        sommets = list(getSommets(arcs))
+        for sommet in sommets:
+            print(str(sommet).rjust(maxi), end=" ", file=f)
+        print(file=f)
+        print("-" * tailleFinale)
+        for i in range(len(matrice)):
+            print(sommets[i], end="", file=f)
+            print("|", end="", file=f)
+            for j in range(len(matrice[i])):
+                print(str(matrice[i][j]).rjust(maxi), end="|", file=f)
+            print(file=f)
+            print("-" * tailleFinale, file=f)
+        print("Calcul puis affichage de la matrice apres l'algorithme de roy warshall", file=f)
+
 nbSommets, nbArcs, arcs=read("test")
-printMatrice(matriceAdjacence(arcs,nbSommets))
+matrice=matriceAdjacence(arcs,nbSommets)
+printMatrice(matrice)
+printTxt(matrice,"test")
+print(floydWarshall(matrice))
