@@ -39,7 +39,7 @@ def floydWarshall(matrice):
         printMatrice(mat)
         printMatrice(new_mat)
         mat = new_mat
-    return mat
+    return new_mat
 
 def maxLen(matrice):
     maxi = 0
