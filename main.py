@@ -39,7 +39,14 @@ def floydWarshall(matrice):
         printMatrice(mat)
         printMatrice(new_mat)
         mat = new_mat
-    return new_mat
+    print(absorbant(mat))
+    return mat
+
+def absorbant(matrice):
+    for i in range(len(matrice[0])):
+        if matrice[i][i]<0:
+            return False
+    return True
 
 def maxLen(matrice):
     maxi = 0
