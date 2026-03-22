@@ -42,9 +42,9 @@ def floydWarshall(matrice):
         mat = new_mat
     if absorbant(mat):
         print("la matrice ne contient pas de cycle absorbant")
+        cout_chemin_FW(mat)
     else:
         print("la matrice contient au moins un cycle absorbant")
-    cout_chemin_FW(mat)
     return mat
 
 def cout_chemin_FW(matrice):
