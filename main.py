@@ -1,4 +1,5 @@
 from math import inf
+import copy
 def read(graphe):
     with open("./graphes/"+graphe+".txt", "r") as f:
         nbSommets=int(clean(f.readline()))
@@ -39,8 +40,28 @@ def floydWarshall(matrice):
         printMatrice(mat)
         printMatrice(new_mat)
         mat = new_mat
-    print(absorbant(mat))
+    if absorbant(mat):
+        print("la matrice ne contient pas de cycle absorbant")
+    else:
+        print("la matrice contient au moins un cycle absorbant")
+    cout_chemin_FW(mat)
     return mat
+
+def cout_chemin_FW(matrice):
+    cout=[]
+    mat = copy.deepcopy(matrice)
+    for i in range(len(mat[0])):
+        acc=False
+        for j in range(len(mat[0])):
+            val, idx = min((val, idx) for idx, val in enumerate(mat[i]))
+            if val!=inf:
+                if acc==False:
+                    cout.append([i,idx,str(i)+"->"+str(idx),val])
+                else:
+                    cout.append([i,idx,str(cout[-1][2])+"->"+str(idx),val])
+                mat[i][idx]=inf
+                acc=True
+    print(cout)
 
 def absorbant(matrice):
     for i in range(len(matrice[0])):
